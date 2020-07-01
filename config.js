@@ -6,3 +6,4 @@ exports.AK = process.env.AK;
 exports.CK = process.env.CK;
 exports.ADMIN_EMAILS = process.env.ADMIN_EMAILS;
 exports.ADMIN_LOC = process.env.ADMIN_LOC;
+exports.COPY_URL = process.env.COPY_URL;
