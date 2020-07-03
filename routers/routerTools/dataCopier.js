@@ -1,4 +1,4 @@
-const { rejects } = require("assert");
+const { getCopyData } = require("../routerTools/getCopyData");
 
 class DataCopier{
     recipeModel;
@@ -17,17 +17,25 @@ class DataCopier{
         if(!results){
             results = [];
         }
-
-        let currentRecipe = recipes[index];
-
+        console.log('status==============');
+        console.log(index, results.length);
         let promise = new Promise((resolve,reject) => {
+            let currentRecipe = recipes[index];
+            console.log(currentRecipe);
+            //if no recipes retrun empty results
+            if(!currentRecipe){
+                resolve(results);
+            }
             let handle = currentRecipe.handle;
+            //if end return results
             if(index === results.length - 1){
                 resolve(results);
             }
-            return recipes.find({handle:handle})
+            return this.recipeModel.find({handle:handle})
 
             .then(recipe => {
+                console.log('found recipe================');
+                console.log(recipe);
                 if(recipe.length === 0){
                     results.push(currentRecipe);
                     resolve(this.checkRecipes(recipes, index + 1, results));
@@ -47,9 +55,17 @@ class DataCopier{
 
     copyData = () =>{
         let promise = new Promise((resolve,reject) => {
-            return this.checkRecipes(this.recipes)
+
+            return getCopyData()
+
+            .then(response => {
+                console.log('==================after request');
+                console.log(response.recipes);
+                return this.checkRecipes(response.recipes)
+            })
 
             .then(filteredRecipes => {
+                console.log('filtered recipes: ',filteredRecipes);
                 resolve(filteredRecipes);
             })
 

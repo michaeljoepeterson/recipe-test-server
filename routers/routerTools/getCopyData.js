@@ -1,8 +1,11 @@
-const {COPY_URL} = require('../../config');
+const {COPY_URL,AK} = require('../../config');
+const request = require('request');
 
 function getCopyData(){
-    const options = {
+    let url = `${COPY_URL}recipes-get/copy?key=${AK}`;
 
+    const options = {
+        url
     };
 
     let promise = new Promise((resolve,reject) =>{
@@ -10,9 +13,11 @@ function getCopyData(){
             console.log('req err: ',error);
             const parsedBody = JSON.parse(body);
             console.log('req body:',parsedBody);
-            resolve(tokenData);
+            resolve(parsedBody);
         });
     });
+
+    return promise;
 }
 
 module.exports = {getCopyData};

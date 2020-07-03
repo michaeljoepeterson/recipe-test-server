@@ -20,7 +20,7 @@ router.post('/',checkCopy,(req,res) => {
         })
 
         .catch(err => {
-            console.log('=============error copying data')
+            console.log('=============error copying data',err);
             return res.json({
                 code:500,
                 message:'error copying data'
