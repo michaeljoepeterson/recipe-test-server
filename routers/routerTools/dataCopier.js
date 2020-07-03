@@ -28,7 +28,7 @@ class DataCopier{
             }
             let handle = currentRecipe.handle;
             //if end return results
-            if(index === results.length - 1){
+            if(index === recipes.length){
                 resolve(results);
             }
             return this.recipeModel.find({handle:handle})
@@ -53,6 +53,30 @@ class DataCopier{
         return promise;
     }
 
+    saveData = (filteredResults,index) => {
+        index = index ? index : 0;
+
+        let promise = new Promise((resolve,reject) => {
+            if(index === filteredResults.length || !filteredResults){
+                resolve('done');
+            }
+            else{
+                let current = filteredResults[index];
+                return this.recipeModel.create(current)
+
+                .then(response => {
+                    resolve(this.saveData(filteredResults, index + 1));
+                })
+
+                .catch(err => {
+                    reject(err);
+                });
+            }
+        });
+
+        return promise;
+    }
+
     copyData = () =>{
         let promise = new Promise((resolve,reject) => {
 
@@ -66,7 +90,12 @@ class DataCopier{
 
             .then(filteredRecipes => {
                 console.log('filtered recipes: ',filteredRecipes);
-                resolve(filteredRecipes);
+                return this.saveData(filteredRecipes);
+                //resolve(filteredRecipes);
+            })
+
+            .then(response => {
+                resolve(response);
             })
 
             .catch(err => {
